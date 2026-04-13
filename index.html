@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMEGA COMMAND — AI Agent Dashboard</title>
+  <meta name="description" content="Real-time dashboard for monitoring and managing autonomous AI agents. Track tasks, credits, and team performance.">
+  <link rel="stylesheet" href="style.css?v=1774662719706">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">🎯</div>
+        <div class="logo-text">
+          <span class="logo-title">OMEGA COMMAND</span>
+          <span class="logo-subtitle">AI Agent Dashboard</span>
+        </div>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-card teal">
+          <div class="stat-icon teal">✅</div>
+          <div class="stat-info">
+            <span class="stat-label">Tasks Completed</span>
+            <span class="stat-value teal" id="statTasks">147</span>
+          </div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon blue">💳</div>
+          <div class="stat-info">
+            <span class="stat-label">Credits Used</span>
+            <span class="stat-value blue" id="statCredits">$42.87</span>
+          </div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon green">👥</div>
+          <div class="stat-info">
+            <span class="stat-label">Agents Online</span>
+            <span class="stat-value green" id="statAgents">12/16</span>
+          </div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-icon red">❤️</div>
+          <div class="stat-info">
+            <span class="stat-label">System Heartbeat</span>
+            <div class="heartbeat-container">
+              <div class="heartbeat-dot"></div>
+              <span class="heartbeat-text">Operational</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== TAB NAVIGATION ===== -->
+  <nav class="tab-nav">
+    <div class="tab-nav-inner">
+      <button class="tab-btn active" data-tab="tasks">
+        <span class="tab-icon">📋</span>
+        Tasks
+        <span class="tab-badge" id="taskBadge">6</span>
+      </button>
+      <button class="tab-btn" data-tab="chat">
+        <span class="tab-icon">💬</span>
+        Chat
+        <span class="tab-badge">3</span>
+      </button>
+      <button class="tab-btn" data-tab="history">
+        <span class="tab-icon">🕒</span>
+        History
+      </button>
+      <button class="tab-btn" data-tab="projects">
+        <span class="tab-icon">📁</span>
+        Projects
+      </button>
+      <button class="tab-btn" data-tab="org">
+        <span class="tab-icon">🏢</span>
+        Org
+      </button>
+      <button class="tab-btn" data-tab="office">
+        <span class="tab-icon">🎮</span>
+        Office
+      </button>
+      <button class="tab-btn" data-tab="memory">
+        <span class="tab-icon">🧠</span>
+        Memory
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+
+    <!-- TASKS TAB -->
+    <div class="tab-panel active" id="tab-tasks">
+      <!-- Connection Status -->
+      <div class="connection-bar" id="connectionBar">
+        <span class="connection-dot" id="connectionDot"></span>
+        <span id="connectionText">Connecting to server...</span>
+      </div>
+
+      <!-- Task Submission -->
+      <div class="task-form" id="taskForm">
+        <div class="task-form-header">
+          <span class="task-form-title">🚀 New Task</span>
+          <div class="task-form-controls">
+            <select class="agent-select" id="agentSelect">
+              <option value="jarvis">🤖 JARVIS — Project Lead</option>
+              <option value="forge">⚙️ FORGE — Web Developer</option>
+              <option value="bolt">⚡ BOLT — Mobile Developer</option>
+              <option value="lens">🔍 LENS — SEO Specialist</option>
+              <option value="pixel">🎨 PIXEL — UI/UX Designer</option>
+              <option value="sage">🔬 SAGE — Researcher</option>
+              <option value="scribe">✍️ SCRIBE — Content Writer</option>
+            </select>
+            <div class="mode-toggle">
+              <button class="mode-btn active" data-mode="tools" id="modeTools">🔧 Tools</button>
+              <button class="mode-btn" data-mode="chat" id="modeChat">💬 Chat</button>
+            </div>
+          </div>
+        </div>
+        <div class="task-form-body">
+          <textarea class="task-input" id="taskInput" rows="3" placeholder="Describe what you need the agent to do... (e.g., 'Build a landing page for a SaaS product' or 'Analyze SEO for example.com')"></textarea>
+          <button class="task-submit-btn" id="taskSubmitBtn">
+            <span>Submit Task</span>
+            <span class="submit-icon">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Task Result Panel (hidden until a task completes) -->
+      <div class="task-result-panel" id="taskResultPanel" style="display:none">
+        <div class="panel-header">
+          <div class="panel-title"><span class="icon">✨</span> Latest Result</div>
+          <button class="panel-close-btn" id="closeResultBtn">✕</button>
+        </div>
+        <div class="panel-body task-result-content" id="taskResultContent"></div>
+      </div>
+
+      <div class="tasks-layout">
+        <!-- Currently Working Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="icon">⚡</span> Currently Working</div>
+            <span class="panel-count" id="workingCount">6 agents</span>
+          </div>
+          <div class="panel-body" id="agentList"></div>
+        </div>
+        <!-- Latest Actions Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="icon">📡</span> Latest Actions</div>
+            <span class="panel-count">Live</span>
+          </div>
+          <div class="panel-body" id="activityFeed"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- HISTORY TAB -->
+    <div class="tab-panel" id="tab-history">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><span class="icon">🕒</span> Mission History</div>
+          <button class="btn-refresh" id="refreshHistory">⟳ Refresh</button>
+        </div>
+        <div class="panel-body">
+          <div class="history-table-wrapper">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Agent</th>
+                  <th>Task</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="historyList">
+                <tr><td colspan="4" style="text-align:center; padding: 2rem; opacity: 0.5;">No history available yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS TAB -->
+    <div class="tab-panel" id="tab-projects">
+      <div class="projects-layout">
+        <div class="projects-header">
+          <div class="projects-title">📁 Workspace Projects</div>
+          <button class="btn-refresh" id="refreshProjects">⟳ Scan Workspace</button>
+        </div>
+        <div class="projects-grid" id="projectsGrid"></div>
+      </div>
+    </div>
+
+    <!-- CHAT TAB -->
+    <div class="tab-panel" id="tab-chat">
+      <div class="chat-layout">
+        <div class="chat-sidebar">
+          <div class="chat-sidebar-header">💬 Channels</div>
+          <div class="chat-channel-list" id="chatChannels"></div>
+        </div>
+        <div class="chat-main">
+          <div class="chat-header">
+            <span class="chat-header-title" id="chatTitle"># general</span>
+            <span class="chat-header-status">All agents connected</span>
+          </div>
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="chat-input-area">
+            <input class="chat-input" type="text" placeholder="Send a message to agents..." id="chatInput">
+            <button class="chat-send-btn" id="chatSendBtn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORG CHART TAB -->
+    <div class="tab-panel" id="tab-org">
+      <div class="org-chart" id="orgChart"></div>
+    </div>
+
+    <!-- OFFICE TAB -->
+    <div class="tab-panel" id="tab-office">
+      <div class="office-container">
+        <div class="office-header">
+          <span class="office-title">🏢 Virtual HQ</span>
+          <div class="office-legend">
+            <div class="legend-item">
+              <div class="legend-dot working"></div>
+              <span>Working</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot idle"></div>
+              <span>Idle / Break</span>
+            </div>
+          </div>
+        </div>
+        <div class="office-canvas-wrapper">
+          <canvas id="officeCanvas" width="900" height="500"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMORY TAB -->
+    <div class="tab-panel" id="tab-memory">
+      <div class="memory-layout">
+        <div class="memory-sidebar">
+          <div class="memory-sidebar-header">🗂️ Categories</div>
+          <div class="memory-categories" id="memoryCategories"></div>
+        </div>
+        <div class="memory-main">
+          <div class="memory-main-header">
+            <span style="font-weight:600; font-size:0.95rem;">Knowledge Base</span>
+            <input class="memory-search" type="text" placeholder="🔍 Search memories..." id="memorySearch">
+          </div>
+          <div class="memory-entries" id="memoryEntries"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
